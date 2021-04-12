@@ -1,0 +1,17 @@
+{
+  "extends": ["airbnb", "airbnb/hooks", "prettier"],
+  "globals": {
+    "fetch": "readonly",
+    "localStorage": true,
+    "document": "readonly",
+    "window": "readonly"
+  },
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".js", ".jsx"]
+      }
+    ]
+  }
+}

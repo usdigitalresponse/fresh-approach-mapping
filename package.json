@@ -1,0 +1,55 @@
+{
+  "name": "fresh-approach-mapping",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "parcel src/index.html",
+    "build-prod": "parcel build src/index.html",
+    "debug": "netlify dev --inspect",
+    "netlify-dev": "netlify dev",
+    "netlify-link": "netlify link",
+    "start": "parcel src/index.html --port 8888",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "functions": "netlify functions list",
+    "lint": "eslint --ignore-path .gitignore \"**/*.{js,jsx}\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@reach/router": "^1.3.4",
+    "d3-scale": "^3.2.3",
+    "dotenv": "^8.2.0",
+    "leaflet": "^1.7.1",
+    "leaflet.heat": "^0.2.0",
+    "lodash.camelcase": "^4.3.0",
+    "lodash.get": "^4.3.0",
+    "node-fetch": "^2.6.1",
+    "prop-types": "^15.7.2",
+    "query-string": "^6.14.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-leaflet": "^3.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "18.2.1",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "netlify-cli": "^3.10.1",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.5.1"
+  },
+  "browserslist": [
+    "last 1 Chrome version"
+  ],
+  "staticFiles": {
+    "staticPath": "public",
+    "watcherGlob": "**"
+  }
+}
