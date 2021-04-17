@@ -222,7 +222,8 @@ export default function Filter({
       const distribution = filteredDistributions[i];
       const distributionAmount = getDistributionAmount(
         distribution,
-        selectedMonths
+        selectedMonths,
+        "totalPounds"
       );
 
       if (min === null || distributionAmount < min) {

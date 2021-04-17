@@ -33,18 +33,20 @@ export function parsePrice(price) {
   return parseFloat((price || "$0.00").split("$")[1].replace(",", ""));
 }
 
-function sumDistributionMonth(month) {
+function sumDistributionMonth(month, key) {
   return !month.length
     ? 0
     : month
-        .map((record) => parseInt(record.totalPounds, 10))
+        .map((record) => parseInt(record[key], 10))
         .reduce((total, item) => total + item, 0);
 }
 
-export function getDistributionAmount(distribution, selectedMonths) {
+export function getDistributionAmount(distribution, selectedMonths, key) {
   return MONTHS.reduce((total, month) => {
     if (selectedMonths.includes(month)) {
-      return total + sumDistributionMonth(distribution[month.toLowerCase()]);
+      return (
+        total + sumDistributionMonth(distribution[month.toLowerCase()], key)
+      );
     }
 
     return total;
@@ -99,11 +101,21 @@ export function getTotalLocationPoundage(
 ) {
   const site = hash[name] || [];
 
-  return site.reduce((total, entry) => {
-    if (!selectedHubs.length || selectedHubs.includes(entry.hub)) {
-      return total + getDistributionAmount(entry, selectedMonths);
-    }
+  return site.reduce(
+    ({ locationPoundage, locationBoxes }, entry) => {
+      if (!selectedHubs.length || selectedHubs.includes(entry.hub)) {
+        return {
+          locationPoundage:
+            locationPoundage +
+            getDistributionAmount(entry, selectedMonths, "totalPounds"),
+          locationBoxes:
+            locationBoxes +
+            getDistributionAmount(entry, selectedMonths, "boxes"),
+        };
+      }
 
-    return total;
-  }, 0);
+      return { locationPoundage, locationBoxes };
+    },
+    { locationPoundage: 0, locationBoxes: 0 }
+  );
 }

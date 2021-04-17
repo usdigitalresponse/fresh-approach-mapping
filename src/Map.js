@@ -135,7 +135,10 @@ const Map = ({ token, removeToken }) => {
                   const isDistributionSite = location.category.includes(
                     "Food Distribution Org"
                   );
-                  const locationPoundage = getTotalLocationPoundage(
+                  const {
+                    locationBoxes,
+                    locationPoundage,
+                  } = getTotalLocationPoundage(
                     location.name,
                     distributionsHash,
                     selectedMonths,
@@ -197,6 +200,9 @@ const Map = ({ token, removeToken }) => {
                                 <>
                                   <strong>Total Food Poundage: </strong>
                                   <span>{locationPoundage}</span>
+                                  <br />
+                                  <strong>Total Boxes: </strong>
+                                  <span>{locationBoxes}</span>
                                 </>
                               )}
                           </div>
@@ -215,10 +221,18 @@ const Map = ({ token, removeToken }) => {
                       ]}
                       pathOptions={{
                         color: distributionGradient(
-                          getDistributionAmount(distribution, selectedMonths)
+                          getDistributionAmount(
+                            distribution,
+                            selectedMonths,
+                            "totalPounds"
+                          )
                         ),
                         weight: getLineWidth(
-                          getDistributionAmount(distribution, selectedMonths),
+                          getDistributionAmount(
+                            distribution,
+                            selectedMonths,
+                            "totalPounds"
+                          ),
                           distributionMinMax
                         ),
                       }}
