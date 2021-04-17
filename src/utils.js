@@ -7,7 +7,7 @@ const LOCATION_COLORS = {
   Hub: "#4897D8",
   "Aggregating Farm": "#FAA055",
   "Food Distribution Org": "#FFDB5c",
-  Distributor: "#2F2E33",
+  Distributor: "#FF0000",
 };
 
 export const MONTHS = ["May", "June", "July", "August", "September"];

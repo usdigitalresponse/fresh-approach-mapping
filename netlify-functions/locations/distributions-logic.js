@@ -38,6 +38,8 @@ function parseDistributions(distributionRecords) {
         hubGeo: dist.hubGeo,
         womanOwned: dist.womanOwned,
         bipocOwned: dist.bipocOwned,
+        schoolSite: dist.schoolSite,
+        foodBankPartner: dist.foodBankPartner,
         certifiedOrganic: dist.certifiedOrganic,
         distributionSite: dist.distributionSite,
         distributionSiteId: dist.distributionSiteId,

@@ -6,17 +6,13 @@ import Grid from "@material-ui/core/Grid";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import ListItemText from "@material-ui/core/ListItemText";
-import FormGroup from "@material-ui/core/FormGroup";
 import FormLabel from "@material-ui/core/FormLabel";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Radio from "@material-ui/core/Radio";
 import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Select from "@material-ui/core/Select";
-import Switch from "@material-ui/core/Switch";
 import { makeStyles } from "@material-ui/core/styles";
 import { scaleLinear } from "d3-scale";
 
@@ -75,15 +71,32 @@ function filteredFarmsTest(record, filters) {
   );
 }
 
-function filterLocations(selectedHubs, filters, records) {
+function filterLocations(
+  selectedHubs,
+  providerFilters,
+  distributorFilters,
+  records
+) {
   return () =>
     records.filter((record) => {
       if (record.category && record.category.includes("Hub")) {
         return filteredHubsTest(selectedHubs, record, "name");
       }
 
-      if (record.category && record.category.includes("Farm")) {
-        return filteredFarmsTest(record, filters);
+      if (
+        record.category &&
+        (record.category.includes("Farm") ||
+          record.category.includes("Aggregating Farm"))
+      ) {
+        return filteredFarmsTest(record, providerFilters);
+      }
+
+      if (
+        record.category &&
+        (record.category.includes("Distributor") ||
+          record.category.includes("Food Distribution Org"))
+      ) {
+        return filteredFarmsTest(record, distributorFilters);
       }
 
       return true;
@@ -100,24 +113,28 @@ export default function Filter({
 
   const [selectedHubs, setSelectedHubs] = useState([]);
   const [selectedMonths, setSelectedMonths] = useState(MONTHS);
-  const [isHeatmap, toggleHeatmap] = useState(false);
   const [showPurchases, setShowPurchases] = useState(true);
   const [showDistributions, setShowDistributions] = useState(true);
-  const [selectedHeatmapOption, setSelectedHeatmapOption] = useState(
-    "providers"
-  );
 
-  //create distributions and purchases hash where first key is
-
-  const [demographicsFilters, setDemographicsFilters] = useState({
+  const [providerFilters, setProviderFilters] = useState({
     bipocOwned: false,
     womanOwned: false,
     certifiedOrganic: false,
   });
 
+  const [distributorFilters, setDistributorFilters] = useState({
+    schoolSite: false,
+    foodBankPartner: false,
+  });
+
   const filteredLocations = useMemo(
-    filterLocations(selectedHubs, demographicsFilters, locations),
-    [locations, demographicsFilters, selectedHubs]
+    filterLocations(
+      selectedHubs,
+      providerFilters,
+      distributorFilters,
+      locations
+    ),
+    [locations, providerFilters, distributorFilters, selectedHubs]
   );
 
   const hubs = useMemo(
@@ -128,10 +145,17 @@ export default function Filter({
     [locations]
   );
 
-  function handleDemographicsFilters({ target: { name } }) {
-    setDemographicsFilters({
-      ...demographicsFilters,
-      [name]: !demographicsFilters[name],
+  function handleProviderFilters({ target: { name } }) {
+    setProviderFilters({
+      ...providerFilters,
+      [name]: !providerFilters[name],
+    });
+  }
+
+  function handleDistributorFilters({ target: { name } }) {
+    setDistributorFilters({
+      ...distributorFilters,
+      [name]: !distributorFilters[name],
     });
   }
 
@@ -140,9 +164,9 @@ export default function Filter({
       purchases.filter(
         (purchase) =>
           filteredHubsTest(selectedHubs, purchase, "hubOrganization") &&
-          filteredFarmsTest(purchase, demographicsFilters)
+          filteredFarmsTest(purchase, providerFilters)
       ),
-    [selectedHubs, demographicsFilters, purchases]
+    [selectedHubs, providerFilters, purchases]
   );
 
   const purchaseMinMax = useMemo(() => {
@@ -182,10 +206,12 @@ export default function Filter({
 
   const filteredDistributions = useMemo(
     () =>
-      distributions.filter((distribution) =>
-        filteredHubsTest(selectedHubs, distribution, "hub")
+      distributions.filter(
+        (distribution) =>
+          filteredHubsTest(selectedHubs, distribution, "hub") &&
+          filteredFarmsTest(distribution, distributorFilters)
       ),
-    [selectedHubs, distributions]
+    [selectedHubs, distributorFilters, distributions]
   );
 
   const distributionMinMax = useMemo(() => {
@@ -282,31 +308,55 @@ export default function Filter({
               control={
                 <Checkbox
                   name="bipocOwned"
-                  checked={demographicsFilters.bipocOwned}
-                  onChange={handleDemographicsFilters}
+                  checked={providerFilters.bipocOwned}
+                  onChange={handleProviderFilters}
                 />
               }
-              label="Filter to BIPOC Owned"
+              label="BIPOC Owned"
             />
             <FormControlLabel
               control={
                 <Checkbox
                   name="womanOwned"
-                  checked={demographicsFilters.womanOwned}
-                  onChange={handleDemographicsFilters}
+                  checked={providerFilters.womanOwned}
+                  onChange={handleProviderFilters}
                 />
               }
-              label="Filter to Women Owned"
+              label="Women Owned"
             />
             <FormControlLabel
               control={
                 <Checkbox
                   name="certifiedOrganic"
-                  checked={demographicsFilters.certifiedOrganic}
-                  onChange={handleDemographicsFilters}
+                  checked={providerFilters.certifiedOrganic}
+                  onChange={handleProviderFilters}
                 />
               }
-              label="Filter to Certified Organic"
+              label="Certified Organic"
+            />
+          </FormControl>
+
+          <FormControl component="fieldset" className={classes.formControl}>
+            <FormLabel component="legend">Filter Distributors</FormLabel>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="schoolSite"
+                  checked={providerFilters.schoolSite}
+                  onChange={handleDistributorFilters}
+                />
+              }
+              label="School Site"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="foodBankPartner"
+                  checked={providerFilters.foodBankPartner}
+                  onChange={handleDistributorFilters}
+                />
+              }
+              label="Food Bank Partner"
             />
           </FormControl>
           <FormControl component="fieldset" className={classes.formControl}>
@@ -336,41 +386,6 @@ export default function Filter({
             </Select>
           </FormControl>
 
-          {/* <FormControl component="fieldset">
-            <FormLabel component="legend">Map Display</FormLabel>
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={isHeatmap}
-                    onChange={() => toggleHeatmap(!isHeatmap)}
-                    name="heatmap"
-                  />
-                }
-                label="Use Heatmap"
-              />
-              <FormLabel component="legend">Heatmap Values</FormLabel>
-              <RadioGroup
-                aria-label="heatmapvalues"
-                name="heatmap-values"
-                value={selectedHeatmapOption}
-                onChange={({ target }) =>
-                  setSelectedHeatmapOption(target.value)
-                }
-              >
-                <FormControlLabel
-                  value="providers"
-                  control={<Radio />}
-                  label="Funds to Providers"
-                />
-                <FormControlLabel
-                  value="distributors"
-                  control={<Radio />}
-                  label="Food to Distributors"
-                />
-              </RadioGroup>
-            </FormGroup>
-          </FormControl> */}
           <div>
             <Typography as="legend" variant="subtitle1">
               Legend
@@ -395,14 +410,14 @@ export default function Filter({
             filteredLocations,
             filteredPurchases,
             filteredDistributions,
-            isHeatmap,
-            selectedHeatmapOption,
             selectedMonths,
             selectedHubs,
-            showPurchases,
+            showPurchases:
+              showPurchases &&
+              Object.values(distributorFilters).every((d) => !d),
             showDistributions:
               showDistributions &&
-              Object.values(demographicsFilters).every((d) => !d),
+              Object.values(providerFilters).every((d) => !d),
             purchaseGradient,
             distributionGradient,
             distributionMinMax,
@@ -417,4 +432,6 @@ export default function Filter({
 Filter.propTypes = {
   locations: PropTypes.arrayOf(PropTypes.object).isRequired,
   children: PropTypes.func.isRequired,
+  distributions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  purchases: PropTypes.arrayOf(PropTypes.object).isRequired,
 };

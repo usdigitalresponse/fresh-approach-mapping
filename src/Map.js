@@ -129,7 +129,9 @@ const Map = ({ token, removeToken }) => {
                     selectedMonths,
                     selectedHubs
                   );
-                  const isFarm = location.category.includes("Farm");
+                  const isFarm =
+                    location.category.includes("Farm") ||
+                    location.category.includes("Aggregating Farm");
                   const isDistributionSite = location.category.includes(
                     "Food Distribution Org"
                   );

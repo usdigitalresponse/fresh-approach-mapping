@@ -29,9 +29,13 @@ function getLocationHash([columns, ...values]) {
         } else if (columnHeader === "category") {
           newLocation[columnHeader] = [row[i]];
         } else if (
-          ["bipocOwned", "womanOwned", "certifiedOrganic"].includes(
-            columnHeader
-          )
+          [
+            "bipocOwned",
+            "womanOwned",
+            "certifiedOrganic",
+            "schoolSite",
+            "foodBankPartner",
+          ].includes(columnHeader)
         ) {
           newLocation[columnHeader] = row[i] === "TRUE";
         } else {
@@ -80,6 +84,8 @@ function matchDistributionNames(distributions, locationHash) {
       distributionSiteId: get(locationHash[distributionSite], "id"),
       distributionSiteGeo: get(locationHash[distributionSite], "geocode"),
       bipocOwned: get(locationHash[distributionSite], "bipocOwned"),
+      schoolSite: get(locationHash[distributionSite], "schoolSite"),
+      foodBankPartner: get(locationHash[distributionSite], "foodBankPartner"),
       womanOwned: get(locationHash[distributionSite], "womanOwned"),
       certifiedOrganic: get(locationHash[distributionSite], "certifiedOrganic"),
       hub,
@@ -101,6 +107,8 @@ function matchPurchasesNames(purchases, locationHash) {
       farmNameId: get(locationHash[farmName], "id"),
       farmNameGeo: get(locationHash[farmName], "geocode"),
       bipocOwned: get(locationHash[farmName], "bipocOwned"),
+      schoolSite: get(locationHash[farmName], "schoolSite"),
+      foodBankPartner: get(locationHash[farmName], "foodBankPartner"),
       womanOwned: get(locationHash[farmName], "womanOwned"),
       certifiedOrganic: get(locationHash[farmName], "certifiedOrganic"),
       hubOrganization,
@@ -113,7 +121,7 @@ exports.handler = async function handler(event) {
   const [addresses, distributions, purchases] = await Promise.all(
     ["Addresses", "Distributions", "Purchases"].map(async (sheetName) => {
       const data = await fetch(
-        `${SHEETS_URI}${SPREADSHEET_ID}/values/${sheetName}!A:L?access_token=${event.headers.authorization}`
+        `${SHEETS_URI}${SPREADSHEET_ID}/values/${sheetName}!A:N?access_token=${event.headers.authorization}`
       );
       return data.json();
     })
