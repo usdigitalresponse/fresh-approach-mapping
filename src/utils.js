@@ -12,9 +12,14 @@ const LOCATION_COLORS = {
 
 export const MONTHS = ["May", "June", "July", "August", "September"];
 
-/*
-Gets map icons using location types.
-*/
+/**
+ * Creates SVG Map Icons for leaflet consumption
+ *
+ * @param   {Array}  locationTypes  Contains a list of location types
+ * for a specific location
+ *
+ * @return  {Object}   Leaflet divIcon for location.
+ */
 export function getMapIcon(locationTypes) {
   return L.divIcon({
     iconSize: (20, 20),
@@ -29,18 +34,43 @@ export function getMapIcon(locationTypes) {
   });
 }
 
+/**
+ * Turns string of dollar amount into float for addition.
+ *
+ * @param   {String}  price  Price from amount.
+ *
+ * @return  {Float}   Amount for future aggregation.
+ */
 export function parsePrice(price) {
   return parseFloat((price || "$0.00").split("$")[1].replace(",", ""));
 }
 
-function sumDistributionMonth(month, key) {
-  return !month.length
+/**
+ * Sums together records for one month for distributors.
+ *
+ * @param   {Array}  monthDistributionList List of distribution records attributed
+ * to a specific month.
+ * @param   {String}  key Takes either 'totalPounds' or 'boxes'.
+ *
+ * @return  {Integer} Sums records attributed to a speicific month.
+ */
+function sumDistributionMonth(monthDistributionList, key) {
+  return !monthDistributionList.length
     ? 0
-    : month
+    : monthDistributionList
         .map((record) => parseInt(record[key], 10))
         .reduce((total, item) => total + item, 0);
 }
 
+/**
+ * Gets total amounts for a distributor.
+ *
+ * @param   {Object}  distribution    Specific distributor location.
+ * @param   {Object}  selectedMonths  Months selected to display in filter control.
+ * @param   {String}  key             The type of data to aggregate, i.e. totalPounds, boxes.
+ *
+ * @return  {Integer}                 Total amount for a specific distribution location.
+ */
 export function getDistributionAmount(distribution, selectedMonths, key) {
   return MONTHS.reduce((total, month) => {
     if (selectedMonths.includes(month)) {
@@ -53,6 +83,15 @@ export function getDistributionAmount(distribution, selectedMonths, key) {
   }, 0);
 }
 
+/**
+ * Gets aggregated purchase amount for a specific farm.
+ *
+ * @param   {Object}       purchase        All purchases for one hub to farm, including all possible months.
+ * @param   {[type]}       selectedMonths  Selected months to display from filter.
+ * @param   {Array[]}  selectedHubs    List of hubs that are selected to display for.
+ *
+ * @return  {Integer}                           Total purchases for one hub to one farm.
+ */
 export function getPurchaseAmount(purchase, selectedMonths, selectedHubs = []) {
   if (selectedHubs.length && !selectedHubs.includes(purchase.hubOrganization)) {
     return 0;
@@ -84,6 +123,14 @@ export function getAggregatedPurchaseAmount(
   return totalPurchases.toFixed(2);
 }
 
+/**
+ * Gets line widths for for map polyline.
+ *
+ * @param   {Integer}  amount An amount for a distribution or purchase.
+ * @param   {Array}  minMax  Minimum and Maximum aggregations for a all possible amounts.
+ *
+ * @return  {Integer}          The width of the line for a respective purchase or distribution.
+ */
 export function getLineWidth(amount, minMax) {
   const [, max] = minMax;
   const base = 1.5;
@@ -93,6 +140,11 @@ export function getLineWidth(amount, minMax) {
   return fraction * 3.5 + base;
 }
 
+/**
+ * Poundage and Boxes for a specific locagion
+ *
+ * @return  {Object}  Boxes and Poundage for specific location.
+ */
 export function getTotalLocationPoundage(
   name,
   hash,
