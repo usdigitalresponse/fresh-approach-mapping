@@ -65,7 +65,7 @@ function filteredHubsTest(selectedHubs, record, recordKey) {
   return !selectedHubs.length || selectedHubs.includes(record[recordKey]);
 }
 
-function filteredFarmsTest(record, filters) {
+function filteredTest(record, filters) {
   return Object.keys(filters).every(
     (filterName) => !filters[filterName] || record[filterName]
   );
@@ -88,7 +88,7 @@ function filterLocations(
         (record.category.includes("Farm") ||
           record.category.includes("Aggregating Farm"))
       ) {
-        return filteredFarmsTest(record, providerFilters);
+        return filteredTest(record, providerFilters);
       }
 
       if (
@@ -96,7 +96,7 @@ function filterLocations(
         (record.category.includes("Distributor") ||
           record.category.includes("Food Distribution Org"))
       ) {
-        return filteredFarmsTest(record, distributorFilters);
+        return filteredTest(record, distributorFilters);
       }
 
       return true;
@@ -164,7 +164,7 @@ export default function Filter({
       purchases.filter(
         (purchase) =>
           filteredHubsTest(selectedHubs, purchase, "hubOrganization") &&
-          filteredFarmsTest(purchase, providerFilters)
+          filteredTest(purchase, providerFilters)
       ),
     [selectedHubs, providerFilters, purchases]
   );
@@ -209,7 +209,7 @@ export default function Filter({
       distributions.filter(
         (distribution) =>
           filteredHubsTest(selectedHubs, distribution, "hub") &&
-          filteredFarmsTest(distribution, distributorFilters)
+          filteredTest(distribution, distributorFilters)
       ),
     [selectedHubs, distributorFilters, distributions]
   );
