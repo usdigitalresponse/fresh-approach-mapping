@@ -154,6 +154,9 @@ exports.handler = async function handler(event) {
       locations: Object.values(parsedLocationHash),
       distributions: newDistributions,
       purchases: newPurchases,
+      contracts: Array.from(
+        new Set(newPurchases.map(({ contract }) => contract))
+      ),
     }),
   };
 };

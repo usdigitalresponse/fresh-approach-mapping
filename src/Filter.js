@@ -105,6 +105,7 @@ function filterLocations(
 
 export default function Filter({
   locations,
+  contracts,
   distributions,
   purchases,
   children,
@@ -112,6 +113,7 @@ export default function Filter({
   const classes = useStyles();
 
   const [selectedHubs, setSelectedHubs] = useState([]);
+  const [selectedContracts, setSelectedContracts] = useState([]);
   const [selectedMonths, setSelectedMonths] = useState(MONTHS);
   const [showPurchases, setShowPurchases] = useState(true);
   const [showDistributions, setShowDistributions] = useState(true);
@@ -164,9 +166,11 @@ export default function Filter({
       purchases.filter(
         (purchase) =>
           filteredHubsTest(selectedHubs, purchase, "hubOrganization") &&
-          filteredTest(purchase, providerFilters)
+          filteredTest(purchase, providerFilters) &&
+          (!selectedContracts.length ||
+            selectedContracts.includes(purchase.contract))
       ),
-    [selectedHubs, providerFilters, purchases]
+    [selectedHubs, providerFilters, selectedContracts, purchases]
   );
 
   const purchaseMinMax = useMemo(() => {
@@ -274,6 +278,34 @@ export default function Filter({
                 <MenuItem key={id} value={name}>
                   <Checkbox checked={selectedHubs.includes(name)} />
                   <ListItemText primary={name} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl component="fieldset" className={classes.formControl}>
+            <InputLabel id="demo-mutiple-chip-label">
+              Filter Contracts
+            </InputLabel>
+            <Select
+              labelId="demo-mutiple-chip-label"
+              id="demo-mutiple-chip"
+              multiple
+              value={selectedContracts}
+              onChange={(event) => setSelectedContracts(event.target.value)}
+              input={<Input id="select-multiple-chip" />}
+              renderValue={(selected) => (
+                <div className={classes.chips}>
+                  {selected.map((name) => (
+                    <Chip key={name} label={name} className={classes.chip} />
+                  ))}
+                </div>
+              )}
+              MenuProps={MenuProps}
+            >
+              {contracts.map((contract) => (
+                <MenuItem key={contract} value={contract}>
+                  <Checkbox checked={selectedContracts.includes(contract)} />
+                  <ListItemText primary={contract} />
                 </MenuItem>
               ))}
             </Select>
@@ -432,6 +464,7 @@ export default function Filter({
 
 Filter.propTypes = {
   locations: PropTypes.arrayOf(PropTypes.object).isRequired,
+  contracts: PropTypes.arrayOf(PropTypes.object).isRequired,
   children: PropTypes.func.isRequired,
   distributions: PropTypes.arrayOf(PropTypes.object).isRequired,
   purchases: PropTypes.arrayOf(PropTypes.object).isRequired,

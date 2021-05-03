@@ -52,7 +52,7 @@ const position = [37.77191462466318, -122.4291251170002];
 const Map = ({ token, removeToken }) => {
   const classes = useStyles();
 
-  const { locations, distributions, purchases } = useData({
+  const { locations, distributions, purchases, contracts } = useData({
     token,
     removeToken,
   });
@@ -88,6 +88,7 @@ const Map = ({ token, removeToken }) => {
       <Nav removeToken={removeToken} />
       <Filter
         locations={locations}
+        contracts={contracts}
         distributions={distributions}
         purchases={purchases}
         className={classes.paper}

@@ -6,9 +6,11 @@ export default function useData({ token, removeToken }) {
   const [locations, setLocations] = useState([]);
   const [distributions, setDistributions] = useState([]);
   const [purchases, setPurchases] = useState([]);
+  const [contracts, setContracts] = useState([]);
 
   const fetchData = useCallback(async () => {
     const {
+      contracts: newContracts,
       locations: newLocations,
       distributions: newDistributions,
       purchases: newPurchases,
@@ -21,6 +23,7 @@ export default function useData({ token, removeToken }) {
       return removeToken();
     }
 
+    setContracts(newContracts);
     setLocations(newLocations);
     setDistributions(newDistributions);
     setPurchases(newPurchases);
@@ -34,6 +37,7 @@ export default function useData({ token, removeToken }) {
 
   return {
     distributions,
+    contracts,
     locations,
     purchases,
   };
