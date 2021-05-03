@@ -2,7 +2,7 @@
 
 ## About
 
-This is a React app using [react leaflet](https://react-leaflet.js.org/) to display food distribution data using [Netlify Functions](https://www.netlify.com/products/functions/)
+This is a prototype React app using [react leaflet](https://react-leaflet.js.org/) to display food distribution data using [Netlify Functions](https://www.netlify.com/products/functions/)
 
 ## Getting Started as a Collaborator
 
@@ -46,3 +46,5 @@ A template for the spreadsheet is available here:
 `https://docs.google.com/spreadsheets/d/1bboLpsDu0I8MkYON5ri39arQlW8HkN-kqbnL7oRq3C4/edit#gid=0`
 
 To create your own food distribution map with your own data, go to File, select `Make a Copy` of the spreadsheet, and start filling in your own locations, distributions and purchases.
+
+Finally, if you need any help getting up and running, please reach out to `@higgyCodes` on Github or Twitter.
