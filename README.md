@@ -42,8 +42,7 @@ It is:
 https://docs.google.com/spreadsheets/d/<SPREADSHEET_ID>/edit#gid=<SOME_OTHER_ID>
 ```
 
-A template for the spreadsheet is available here:
-`https://docs.google.com/spreadsheets/d/1bboLpsDu0I8MkYON5ri39arQlW8HkN-kqbnL7oRq3C4/edit#gid=0`
+A template for the spreadsheet is available (here).[https://docs.google.com/spreadsheets/d/1bboLpsDu0I8MkYON5ri39arQlW8HkN-kqbnL7oRq3C4/edit#gid=0].
 
 To create your own food distribution map with your own data, go to File, select `Make a Copy` of the spreadsheet, and start filling in your own locations, distributions and purchases.
 
