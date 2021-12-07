@@ -1,3 +1,6 @@
+⚠️ **This repository is no longer maintained!** ⚠️ For the current version, please check https://github.com/Fresh-Approach/ca-fresh-approach-mapping.
+
+
 # Fresh Approach Mapping
 
 ## About
